@@ -21,7 +21,7 @@ CREATE SCHEMA sales_schema
     [AUTHORIZATION dbo;]
 GO
 Create Table 
---Structure:
+Structure:
 CREATE TABLE [database_name].[schema_name].[table_name]
 (
     column1 datatype,
@@ -39,46 +39,50 @@ CREATE TABLE sales.sales_schema.orders
 );
 
 2. Alter Table 
-Alter Table - Add Column
---Structure:
-ALTER TABLE table_name
-ADD column_name datatype constraints;
---Example:
-ALTER TABLE production.products
-ADD product_description VARCHAR(500);
+--Alter Table - Add Column
+    --Structure:
+    --ALTER TABLE table_name
+    --ADD column_name datatype constraints;
+    
+    --Example:
+    ALTER TABLE production.products
+    ADD product_description VARCHAR(500);
 
-Alter Table - Drop Column
---Structure:
-ALTER TABLE table_name
-DROP COLUMN column_name;
-
---Example:
-ALTER TABLE sales.customers
-DROP COLUMN phone;
-
-
-Alter Table - Modify Column’s Data Type
---Structure:
-ALTER TABLE table_name
-ALTER COLUMN column_name new_datatype;
--- when you need edit datatype 
---Example:
-ALTER TABLE sales.stores
-ALTER COLUMN zip_code VARCHAR(10);
+--Alter Table - Drop Column
+    --Structure:
+    --ALTER TABLE table_name
+    --DROP COLUMN column_name;
+    
+    --Example:
+    ALTER TABLE sales.customers
+    DROP COLUMN phone;
 
 
-Alter Table - Rename Column
-If you need to rename table  you use the following syntax:
-EXEC sp_rename 'staff', 'workers';
+--Alter Table - Modify Column’s Data Type
+    --Structure:
+    --ALTER TABLE table_name
+    --ALTER COLUMN column_name new_datatype;
+    -- when you need edit datatype 
+    
+    --Example:
+    ALTER TABLE sales.stores
+    ALTER COLUMN zip_code VARCHAR(10);
+
+
+--Alter Table - Rename Column
+--If you need to rename table  you use the following syntax:
+    --Structure
+    --EXEC sp_rename 'Old Name', 'New Name';
+
+    --Example
+    EXEC sp_rename 'staff', 'workers';
 ---------------------------------------------------------------------
+--If you need to rename column in table  you use the following syntax:
+    --Structure 
+    --Exec sp_rename table name. column old name ',' column new name ','column;
 
-EXEC sp_rename 'staff', 'workers';
-
-    If you need to rename column in table  you use the following syntax:
-Exec sp_rename table name. column old name ',' column new name ','column;
-----------------------------------------------------------------------
-
-EXEC sp_rename 'categories.category_name', 'cname', 'COLUMN'; 
+    --Example 
+    EXEC sp_rename 'categories.category_name', 'cname', 'COLUMN'; 
 
 Alter ADD Constraint  
 
@@ -115,10 +119,9 @@ ALTER TABLE employees
 ADD CONSTRAINT pk_employe PRIMARY KEY (employee_id);
 
 --4. Add a Foreign Key Constraint
-
 --Structure 
-ALTER TABLE Schema_Name.Table_Name
-ADD CONSTRAINT Constraint_Name FOREIGN KEY (Chield_Column) REFERENCES Perent_Table (Prent_Column);
+--ALTER TABLE Schema_Name.Table_Name
+--ADD CONSTRAINT Constraint_Name FOREIGN KEY (Chield_Column) REFERENCES Perent_Table (Prent_Column);
 
 
 

@@ -1,21 +1,19 @@
--- Create the database and use it
+
 CREATE DATABASE Employee;
 
-
--- Create schemas
 CREATE SCHEMA hr;
 
 CREATE SCHEMA projects;
 
 CREATE SCHEMA company;
 
+--------------------------------------------------------------------------
 
--- Create tabls in hr 
 CREATE TABLE hr.departments (
     department_id INT IDENTITY(1,1) PRIMARY KEY,
     department_name VARCHAR(255) NOT NULL
 );
--- Insert departments
+
 INSERT INTO hr.departments (department_name)
 VALUES 
 ('Civil Engineering'), 
@@ -26,6 +24,7 @@ VALUES
 ('Sales'), 
 ('Support');
 -----------------------------------------------------------------------------
+
 CREATE TABLE hr.employees (
     employee_id INT IDENTITY(1,1) PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -38,7 +37,7 @@ CREATE TABLE hr.employees (
     FOREIGN KEY (department_id) REFERENCES hr.departments(department_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (manager_id) REFERENCES hr.employees(employee_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );
--- Insert employees
+
 INSERT INTO hr.employees (first_name, last_name, email, hire_date, job_title, department_id, manager_id)
 VALUES 
 ('Khaled', 'Abdel Nasser', 'khaled@example.com', '2022-01-01', 'Senior Engineer', 1, NULL),  
@@ -56,6 +55,7 @@ VALUES
 ('Rania', 'Ahmed', 'rania@example.com', '2023-01-01', 'Support Specialist', 1, NULL),  
 ('Salma', 'Hassan', 'salma@example.com', '2023-02-01', 'Intern', 1, NULL);
 -----------------------------------------------------------------------------
+
 CREATE TABLE hr.salaries (
     employee_id INT NOT NULL,
     salary DECIMAL(10, 2) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE hr.salaries (
     PRIMARY KEY (employee_id, effective_date),
     FOREIGN KEY (employee_id) REFERENCES hr.employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
--- Insert salaries
+
 INSERT INTO hr.salaries (employee_id, salary, effective_date)
 VALUES 
 (1, 5000.00, '2023-01-01'),
@@ -81,6 +81,7 @@ VALUES
 (13, 3000.00, '2023-02-01'),
 (14, 2000.00, '2023-02-01');
 -----------------------------------------------------------------------------
+
 CREATE TABLE hr.performance_reviews (
     review_id INT IDENTITY(1,1) PRIMARY KEY,
     employee_id INT NOT NULL,
@@ -89,7 +90,7 @@ CREATE TABLE hr.performance_reviews (
     comments TEXT,
     FOREIGN KEY (employee_id) REFERENCES hr.employees(employee_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
--- Insert performance reviews
+
 INSERT INTO hr.performance_reviews (employee_id, review_date, rating, comments)
 VALUES 
 (1, '2023-06-01', 4, 'Excellent performance'),
@@ -107,7 +108,7 @@ VALUES
 (13, '2023-06-01', 2, 'Needs improvement'),
 (14, '2023-06-01', 3, 'Satisfactory performance');
 -----------------------------------------------------------------------------
--- Create tables in projects schema
+
 CREATE TABLE projects.projects (
     project_id INT IDENTITY(1,1) PRIMARY KEY,
     project_name VARCHAR(255) NOT NULL,
@@ -116,7 +117,7 @@ CREATE TABLE projects.projects (
     end_date DATE,
     FOREIGN KEY (department_id) REFERENCES hr.departments(department_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
--- Insert projects
+
 INSERT INTO projects.projects (project_name, department_id, start_date, end_date)
 VALUES 
 ('New House', 1, '2022-01-01', '2022-06-01'),
@@ -129,26 +130,50 @@ VALUES
 ('HR Improvement', 4, '2022-08-01', '2023-02-01'),
 ('Financial Audit', 5, '2022-09-01', '2023-03-01');
 -----------------------------------------------------------------------------
+
 CREATE TABLE projects.project_status (
     status_id INT IDENTITY(1,1) PRIMARY KEY,
     status_name VARCHAR(100) NOT NULL
 );
--- Insert project statuses
+
 INSERT INTO projects.project_status (status_name)
 VALUES 
 ('Planned'),
 ('In Progress'),
 ('Completed'),
 ('On Hold');
+
 -----------------------------------------------------------------------------
--- Create tables in company schema
+
+CREATE TABLE projects.tasks (
+    task_id INT IDENTITY(1,1) PRIMARY KEY,
+    task_name VARCHAR(255) NOT NULL,
+    project_id INT NOT NULL,
+    assigned_employee_id INT NULL,
+    due_date DATE NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects.projects(project_id) ON DELETE NO ACTION ON UPDATE CASCADE,
+    FOREIGN KEY (assigned_employee_id) REFERENCES hr.employees(employee_id) ON DELETE SET NULL ON UPDATE NO ACTION
+);
+
+INSERT INTO projects.tasks (task_name, project_id, assigned_employee_id, due_date, status)
+VALUES 
+('Design Phase', 1, 2, '2022-05-01', 'Completed'),
+('Development Phase', 2, 3, '2022-07-01', 'In Progress'),
+('Marketing Plan', 3, 4, '2022-08-01', 'Completed'),
+('System Testing', 4, 8, '2022-09-01', 'In Progress'),
+('Recruitment Process', 5, 5, '2022-10-01', 'Planned'),
+('Budget Planning', 6, 11, '2022-11-01', 'On Hold');
+
+-----------------------------------------------------------------------------
+
 CREATE TABLE company.locations (
     location_id INT IDENTITY(1,1) PRIMARY KEY,
     location_name VARCHAR(255) NOT NULL,
     city VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL
 );
--- Insert locations
+
 INSERT INTO company.locations (location_name, city, country)
 VALUES 
 ('Head Office', 'Cairo', 'Egypt'),
@@ -159,28 +184,4 @@ VALUES
 
 
 
-
-USE Employee;
-GO
--- Create tasks table
-CREATE TABLE projects.tasks (
-    task_id INT IDENTITY(1,1) PRIMARY KEY,
-    task_name VARCHAR(255) NOT NULL,
-    project_id INT NOT NULL,
-    assigned_employee_id INT NULL,
-    due_date DATE NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (project_id) REFERENCES projects.projects(project_id) ON DELETE NO ACTION ON UPDATE CASCADE,
-    FOREIGN KEY (assigned_employee_id) REFERENCES hr.employees(employee_id) ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- Insert sample tasks
-INSERT INTO projects.tasks (task_name, project_id, assigned_employee_id, due_date, status)
-VALUES 
-('Design Phase', 1, 2, '2022-05-01', 'Completed'),
-('Development Phase', 2, 3, '2022-07-01', 'In Progress'),
-('Marketing Plan', 3, 4, '2022-08-01', 'Completed'),
-('System Testing', 4, 8, '2022-09-01', 'In Progress'),
-('Recruitment Process', 5, 5, '2022-10-01', 'Planned'),
-('Budget Planning', 6, 11, '2022-11-01', 'On Hold');
 

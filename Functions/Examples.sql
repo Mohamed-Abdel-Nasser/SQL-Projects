@@ -13,6 +13,13 @@
 		FROM sales.order_items
 		GROUP BY order_id
 		ORDER BY net_amount DESC;
+		
+		CREATE FUNCTION GetNetSales (@quantity INT , @list_price DEC(10,2), @discount DEC(10,2))RETURNS DECIMAL(10,2)
+		AS 
+		BEGIN 
+		    RETURN @quantity * @list_price *(1 - @discount)
+		END
+		
 --#############################################################################################
 -- Example 2: Scalar Function to Calculate Discount Amount
 -- This function calculates the discount amount for a given quantity, list price, and discount rate.
@@ -30,28 +37,26 @@
 -- Example 3: Table-Valued Function to Retrieve Contacts
 -- This function returns a table containing the first name, last name, email, phone number,
 -- and contact type (either 'Staff' or 'Customer') from the sales.staffs and sales.customers tables.
-		CREATE FUNCTION Contacts() RETURNS @contacts TABLE (
-			first_name VARCHAR(50),
-			last_name VARCHAR(50),
-			email VARCHAR(255),
-			phone VARCHAR(25),
-			contact_type VARCHAR(20)
-		)
-		AS
-		BEGIN
-			INSERT INTO @contacts
-			SELECT first_name, last_name, email, phone, 'Staff'
-			FROM sales.staffs;
+CREATE FUNCTION Contacts() RETURNS @contacts TABLE (
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	email VARCHAR(255),
+	phone VARCHAR(25),
+	contact_gtype VARCHAR(20)
+	)
+AS
+BEGIN
+	INSERT INTO @contacts
+	SELECT first_name, last_name, email, phone, 'Staff'
+	FROM sales.staffs;
+	INSERT INTO @contacts
+	SELECT first_name, last_name, email, phone, 'Customer'
+	FROM sales.customers;
+	RETURN;
+END;
 
-			INSERT INTO @contacts
-			SELECT first_name, last_name, email, phone, 'Customer'
-			FROM sales.customers;
-
-			RETURN;
-		END;
-
-		-- Usage:
-		SELECT * FROM dbo.Contacts();
+-- Usage:
+SELECT * FROM dbo.Contacts();
 --#############################################################################################
 --Example 4: Scalar Function to Get Full Customer Name
 --This function concatenates the first name and last name of a customer.
@@ -64,7 +69,6 @@
 			WHERE customer_id = @customer_id;
 			RETURN @full_name;
 		END;
-
 		-- Usage:
 		SELECT dbo.GetCustomerFullName(1) AS CustomerFullName;
 --#############################################################################################

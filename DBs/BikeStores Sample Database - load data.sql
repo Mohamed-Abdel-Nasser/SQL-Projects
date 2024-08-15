@@ -1,4 +1,3 @@
-
 CREATE DATABASE BikeStores
 USE BikeStores;
 
@@ -100,10 +99,7 @@ CREATE TABLE production.stocks (
 );
 
 
-
-
-
-
+-- Insert Simple Data
 
 use BikeStores;
 

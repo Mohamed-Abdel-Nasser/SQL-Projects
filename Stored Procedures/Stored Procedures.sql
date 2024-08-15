@@ -43,18 +43,18 @@
 --## Stored Procedures - With Input and Output Parameters 
 --Creating a stored procedure with One parameters
 
-		CREATE PROCEDURE SP_Find_Products 
-						 @min_list_price AS DECIMAL
-		AS
-		BEGIN
-			SELECT product_name,list_price
-			FROM production.products
-			WHERE list_price >= @min_list_price
-			ORDER BY list_price;
-		END;
+CREATE PROCEDURE SP_Find_Products 
+				 @min_list_price AS DECIMAL
+AS
+BEGIN
+	SELECT product_name,list_price
+	FROM production.products
+	WHERE list_price >= @min_list_price
+	ORDER BY list_price;
+END;
 
-		EXEC SP_Find_Products 100;
-
+EXEC SP_Find_Products 100;
+--#####################################################################################
 --Creating a stored procedure with multiple parameters
 		ALTER PROCEDURE SP_Find_Products
 						@min_list_price AS DECIMAL,
